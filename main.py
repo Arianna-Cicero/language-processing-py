@@ -1,4 +1,4 @@
-from conversion.afn_to_afd import read_afn, afn_to_afd, generate_graphviz, recognize_word
+from conversion.afnd_to_afd import read_afn, afn_to_afd, generate_graphviz, recognize_word
 import itertools
 
 
