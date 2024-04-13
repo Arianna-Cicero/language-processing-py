@@ -1,4 +1,6 @@
 from conversion.afn_to_afd import read_afn, afn_to_afd, generate_graphviz, recognize_word
+import itertools
+
 
 def main():
     # Load AFN and AFD definitions from JSON files
@@ -8,7 +10,7 @@ def main():
     # Check if AFN to AFD conversion was successful
     if afd_definition is None:
         print("Error: Unable to convert AFN to AFD.")
-        return
+        return 
 
     # Generate Graphviz representation of the AFN
     afn_graph = generate_graphviz(afn_definition)

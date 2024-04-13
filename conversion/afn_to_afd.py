@@ -1,5 +1,7 @@
 import json
 from graphviz import Digraph
+import itertools
+
 
 def read_afn(file_path):
     try:
