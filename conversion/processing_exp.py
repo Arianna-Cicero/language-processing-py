@@ -1,12 +1,10 @@
-import json
-from afnd_to_afd import read_afn, afn_to_afd
+from graphviz import Digraph
 
-# Definição das funções para cada operação
-def alt(args):  # args = ['a','ab'] -> args = ["a"]
+def alt(args):
     return f'{args[0]}|{args[1]}'
 
 def seq(args):
-    return f'{args[0]}{args[1]}'
+    return f'{args[0]}|{args[1]}'
 
 def kle(args):
     return f'{args[0]}*'
@@ -14,22 +12,19 @@ def kle(args):
 def trans(args):
     return f'{args[0]}+'
 
+operators: dict = {
+    "alt": (alt, 0),
+    "seq": (seq, 1),
+    "kle": (kle, 2),
+    "trans": (trans, 2)
 
-# Dicionário de operadores para mapear operações e suas prioridades
-operadores = {
-    "alt": (alt, 0),     # união            |
-    "seq": (seq, 1),     # concatenação     .
-    "kle": (kle, 2),     # fecho de kleene  *
-    "trans": (trans, 2)  # fecho transitivo +
 }
 
 def evaluate(arv):
-    # Avalia operadores, símbolos e epsilon
     if isinstance(arv, dict):
-        if 'op' in arv:  # Avalia operações
-            op, op_priority = operadores[arv['op']]
+        if 'op' in arv: 
+            op, op_priority = operators[arv['op']]
             args_res = [evaluate(a) for a in arv['args']]
-            # Processa os argumentos com base na prioridade
             processed_args = [a[0] if op_priority < a[1] else f'({a[0]})' for a in args_res]
             return op(processed_args), op_priority
 
@@ -40,17 +35,3 @@ def evaluate(arv):
             return 'ε', 3
 
     raise Exception("Formato de árvore de expressão regular inválido")
-
-def main():
-    with open("expressoes_regulares.json", "r") as f:
-        expressoes_regulares = json.load(f)
-
-    for nome, arvore in expressoes_regulares.items():
-        try:
-            resultado, _ = evaluate(arvore)
-            print(f"A expressão regular '{nome}' é: {resultado}")
-        except Exception as e:
-            print(f"Erro ao avaliar a expressão regular '{nome}': {e}")
-
-if __name__ == "__main__":
-    main()

@@ -9,22 +9,20 @@ def read_afn(file_path):
             afn_definition = json.load(f)
         return afn_definition
     except FileNotFoundError:
-        print(f"Error: File '{file_path}' not found.")
+        print(f"Erro: doc '{file_path}' nao encontrado.")
         return None
     except json.JSONDecodeError:
-        print(f"Error: File '{file_path}' is not a valid JSON file.")
+        print(f"Erro: doc '{file_path}' nao e um json valido.")
         return None
 
 def generate_graphviz(afn_definition):
     try:
         dot = Digraph(comment='Automaton')
 
-        # Add nodes
         for state in afn_definition['Q']:
             shape = 'doublecircle' if state in afn_definition['F'] else 'circle'
             dot.node(state, shape=shape)
 
-        # Add transitions
         for from_state, transitions in afn_definition['delta'].items():
             for symbol, to_states in transitions.items():
                 for to_state in to_states:
@@ -32,7 +30,7 @@ def generate_graphviz(afn_definition):
 
         return dot
     except KeyError as e:
-        print(f"Error: AFN definition is missing key '{e}'")
+        print(f"Erro: a definicao de AFND lhe falta uma chave '{e}'")
         return None
 
 def afn_to_afd(afn_definition):
@@ -46,7 +44,7 @@ def afn_to_afd(afn_definition):
         afn_states_combinations = [tuple(sorted(set(states))) for states in itertools.chain.from_iterable(itertools.combinations(afn_states, r) for r in range(len(afn_states) + 1))]
         afn_states_combinations_map = {combination: i for i, combination in enumerate(afn_states_combinations)}
 
-        afd_definition = {
+        afd_definition: dict = {
             'Q': [],
             'V': afn_alphabet,
             'q0': None,
@@ -78,7 +76,7 @@ def afn_to_afd(afn_definition):
 
         return afd_definition
     except KeyError as e:
-        print(f"Error: AFN definition is missing key '{e}'")
+        print(f"Erro: AFND falta-lhe uma chave '{e}'")
         return None
 
 
@@ -87,30 +85,22 @@ def recognize_word(afd_definition, word):
         current_state = afd_definition['q0']
         for symbol in word:
             if symbol not in afd_definition['V']:
-                print(f"Error: Symbol '{symbol}' is not in the alphabet.")
+                print(f"Erro: O simbolo '{symbol}' nao esta no alfabeto.")
                 return False
             if current_state not in afd_definition['Q']:
-                print(f"Error: Invalid state '{current_state}' encountered.")
+                print(f"Erro: estado invalido '{current_state}' encontrado.")
                 return False
             if symbol in afd_definition['delta'][current_state]:
                 current_state = afd_definition['delta'][current_state][symbol]
             else:
-                print(f"Error: No transition for symbol '{symbol}' from state '{current_state}'.")
+                print(f"Erro: nao ha transicao para o simbolo '{symbol}' do estado '{current_state}'.")
                 return False
         if current_state in afd_definition['F']:
-            print(f"Word '{word}' is recognized by the AFD.")
+            print(f"A palavra '{word}' e reconhecida pelo AFD.")
             return True
         else:
-            print(f"Word '{word}' is not recognized by the AFD.")
+            print(f"A palavra '{word}' NAO e reconhecida pelo AFD.")
             return False
     except KeyError as e:
-        print(f"Error: AFD definition is missing key '{e}'")
+        print(f"Erro: a definicao de AFD falta-lhe uma chave'{e}'")
         return False
-
-
-# def main():
-#     
-#     pass
-
-# if __name__ == "__main__":
-#     main()
