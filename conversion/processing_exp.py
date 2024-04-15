@@ -1,4 +1,5 @@
 import json
+from afnd_to_afd import read_afn, afn_to_afd
 
 # Definição das funções para cada operação
 def alt(args):  # args = ['a','ab'] -> args = ["a"]
