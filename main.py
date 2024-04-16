@@ -6,6 +6,10 @@ import json
 def main():
     afn_definition = read_afn("afnd.json")
     afd_definition = afn_to_afd(afn_definition)
+    
+    word = "abab"
+
+    recognize_word(afd_definition, word)
 
     if afd_definition is None:
         print("Erro: nao foi possivel converter AFND para AFD.")
@@ -19,10 +23,7 @@ def main():
     if afd_graph is not None:
         afd_graph.render('afd_grafo', view=True)
 
-    word = "abab"
-
-    recognize_word(afd_definition, word)
-
+    
     # parte b
     with open("exemplo01.er.json","r") as f:
         arvore = json.load(f)

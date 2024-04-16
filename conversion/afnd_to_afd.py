@@ -83,24 +83,29 @@ def afn_to_afd(afn_definition):
 def recognize_word(afd_definition, word):
     try:
         current_state = afd_definition['q0']
+        path = [current_state]  # Inicializa o caminho com o estado inicial
         for symbol in word:
             if symbol not in afd_definition['V']:
-                print(f"Erro: O simbolo '{symbol}' nao esta no alfabeto.")
+                print(f"Erro: O símbolo '{symbol}' não está no alfabeto.")
                 return False
             if current_state not in afd_definition['Q']:
-                print(f"Erro: estado invalido '{current_state}' encontrado.")
+                print(f"Erro: Estado inválido '{current_state}' encontrado.")
                 return False
             if symbol in afd_definition['delta'][current_state]:
-                current_state = afd_definition['delta'][current_state][symbol]
+                next_state = afd_definition['delta'][current_state][symbol]
+                path.append(next_state)  # Adiciona o próximo estado ao caminho
+                current_state = next_state
             else:
-                print(f"Erro: nao ha transicao para o simbolo '{symbol}' do estado '{current_state}'.")
+                print(f"Erro: Não há transição para o símbolo '{symbol}' do estado '{current_state}'.")
                 return False
         if current_state in afd_definition['F']:
-            print(f"A palavra '{word}' e reconhecida pelo AFD.")
+            print(f"A palavra '{word}' é reconhecida pelo AFD.")
+            print(f"Caminho percorrido: {' -> '.join(path)}")
             return True
         else:
-            print(f"A palavra '{word}' NAO e reconhecida pelo AFD.")
+            print(f"A palavra '{word}' NÃO é reconhecida pelo AFD.")
+            print(f"Caminho percorrido até a rejeição: {' -> '.join(path)}")
             return False
     except KeyError as e:
-        print(f"Erro: a definicao de AFD falta-lhe uma chave'{e}'")
+        print(f"Erro: A definição de AFD está faltando uma chave '{e}'")
         return False
