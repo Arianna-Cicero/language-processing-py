@@ -56,7 +56,6 @@ def convert_to_afnd(expression_tree):
 
     def process_node(node, current_state):
         if "simb" in node:
-            # Process a symbol
             symbol = node["simb"]
             afnd["V"].append(symbol)
             next_state = current_state + 1
@@ -65,23 +64,19 @@ def convert_to_afnd(expression_tree):
             add_transition(current_state, symbol, next_state)
             return next_state
         elif "op" in node:
-            # Process an operator
             if node["op"] == "alt":
-                # Process alternate operator |
                 left_state = process_node(node["args"][0], current_state)
                 right_state = process_node(node["args"][1], current_state)
                 afnd["q0"] = current_state
                 afnd["F"].extend([left_state, right_state])
                 return right_state + 1
             elif node["op"] == "seq":
-                # Process concatenation operator .
                 left_state = process_node(node["args"][0], current_state)
                 right_state = process_node(node["args"][1], left_state)
                 afnd["q0"] = current_state
                 afnd["F"].append(right_state)
                 return right_state + 1
             elif node["op"] == "kle":
-                # Process Kleene closure operator *
                 kleene_state = process_node(node["args"][0], current_state)
                 afnd["q0"] = current_state
                 afnd["F"].append(kleene_state)

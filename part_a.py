@@ -29,10 +29,10 @@ def generate_graph_pdf(afd_definition, output_file):
 
         graph = Source(dot_code)
         graph.render(output_file, format='pdf', cleanup=True)
-        print(f"O grafo do AFD foi salvo em '{output_file}.pdf'.")
+        print(f"O grafo do AFD foi guardado em '{output_file}.pdf'.")
         return True
     except KeyError as e:
-        print(f"Erro: a definição de AFD está faltando uma chave '{e}'.")
+        print(f"Erro: a definição de AFD falta lhe uma chave '{e}'.")
         return False
 
 def recognize_word(afd_definition, word):
@@ -54,7 +54,7 @@ def recognize_word(afd_definition, word):
                 print(f"Erro: Não há transição para o símbolo '{symbol}' do estado '{current_state}'.")
                 return False
         if current_state in afd_definition['F']:
-            print(f"A palavra '{word}' é reconhecida pelo AFD.")
+            print(f"A palavra '{word}' é reconhecida pelo AFD!")
             print(f"Caminho percorrido: {' -> '.join(path)}")
             return True
         else:
@@ -73,7 +73,7 @@ def main():
     afd_file = "afd.json"
     afd_definition = read_afd(afd_file)
     if afd_definition:
-        generate_graph_pdf(afd_definition, "afd_graph_part_a")
+        generate_graph_pdf(afd_definition, "afd_grafico_part_a")
         word = read_word_from_user()
         recognize_word(afd_definition, word)
 

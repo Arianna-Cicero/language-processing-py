@@ -5,7 +5,7 @@ from graphviz import Digraph
 
 def read_afnd(file_path):
     try:
-        print('Entrando na leitura do AFND...')
+        print('entrei a ler o AFND...')
         with open(file_path, "r") as f:
             afnd_definition = json.load(f)
         return afnd_definition
@@ -31,68 +31,63 @@ def generate_graph_pdf(afd_definition, output_file):
                     dot.edge(from_state, to_state, label=symbol)
 
         dot.render(output_file, format='pdf', cleanup=True)
-        print(f"O gráfico do AFD foi salvo em '{output_file}.pdf'.")
+        print(f"O gráfico do AFD foi guardado em '{output_file}.pdf'.")
         return True
     except KeyError as e:
-        print(f"Erro: a definição de AFD está faltando uma chave '{e}'.")
+        print(f"Erro: a definição de AFD falta-lhe uma chave '{e}'.")
         return False
 
 
 
-def afnd_to_afd(afn_definition):
+def afnd_to_afd(afnd_definition):
     try:
-        print('Convertendo AFND para AFD...')
-        afn_states = afn_definition['Q']
-        afn_alphabet = afn_definition['V']
-        afn_delta = afn_definition['delta']
-        afn_initial_state = afn_definition['q0']
-        afn_final_states = afn_definition['F']
+        print("entre a converter afnd para afd")
+        afnd_states = afnd_definition['Q']
+        afnd_alphabet = afnd_definition['V']
+        afnd_delta = afnd_definition['delta']
+        afnd_initial_state = afnd_definition['q0']
+        afnd_final_states = afnd_definition['F']
 
-        # Passo 1: Gerar todas as combinações de estados do AFND
-        afn_states_combinations = [tuple(sorted(set(states))) for states in
+        afnd_states_combinations = [tuple(sorted(set(states))) for states in
                                    itertools.chain.from_iterable(
-                                       itertools.combinations(afn_states, r) for r in range(len(afn_states) + 1))]
+                                       itertools.combinations(afnd_states, r) for r in range(len(afnd_states) + 1))]
 
-        # Passo 2: Mapear as combinações de estados do AFND para os estados do AFD
-        afn_states_combinations_map = {combination: i for i, combination in enumerate(afn_states_combinations)}
+        afn_states_combinations_map = {combination: i for i, combination in enumerate(afnd_states_combinations)}
 
-        # Passo 3: Inicializar a definição do AFD
         afd_definition = {
             'Q': [],
-            'V': afn_alphabet,
+            'V': afnd_alphabet,
             'q0': None,
             'F': [],
             'delta': {}
         }
 
-        # Passo 4: Gerar os estados do AFD
-        for combination in afn_states_combinations:
+        for combination in afnd_states_combinations:
             afd_state = ''.join(combination)
             afd_definition['Q'].append(afd_state)
-            if afn_initial_state in combination:
+            if afnd_initial_state in combination:
                 afd_definition['q0'] = afd_state
-            if any(state in combination for state in afn_final_states):
+            if any(state in combination for state in afnd_final_states):
                 afd_definition['F'].append(afd_state)
 
-        # Passo 5: Gerar a função de transição do AFD
-        for combination in afn_states_combinations:
+        for combination in afnd_states_combinations:
             afd_state = ''.join(combination)
             afd_definition['delta'][afd_state] = {}
 
-            for symbol in afn_alphabet:
+            for symbol in afnd_alphabet:
                 destination_states = set()
                 for state in combination:
-                    if state in afn_delta and symbol in afn_delta[state]:
-                        destination_states.update(afn_delta[state][symbol])
+                    if state in afnd_delta and symbol in afnd_delta[state]:
+                        destination_states.update(afnd_delta[state][symbol])
                 if destination_states:
                     destination_combination = tuple(sorted(destination_states))
                     destination_state = afn_states_combinations_map[destination_combination]
                     afd_definition['delta'][afd_state][symbol] = afd_definition['Q'][destination_state]
 
-        print('Conversão AFND para AFD concluída.')
+        print('Conversão AFND para AFD feitinha.')
         return afd_definition
     except KeyError as e:
-        print(f"Erro: AFND está faltando uma chave '{e}'")
+        print(f"Erro: AFND falta lhe uma chave '{e}'")
         return None
 
 
