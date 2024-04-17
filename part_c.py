@@ -5,7 +5,7 @@ from graphviz import Digraph
 
 def read_afnd(file_path):
     try:
-        print('entrei a ler o AFND...')
+        print('Entrei a ler o AFND...')
         with open(file_path, "r") as f:
             afnd_definition = json.load(f)
         return afnd_definition
@@ -41,7 +41,7 @@ def generate_graph_pdf(afd_definition, output_file):
 
 def afnd_to_afd(afnd_definition):
     try:
-        print("entre a converter afnd para afd")
+        print("Entrei a converter afnd para afd")
         afnd_states = afnd_definition['Q']
         afnd_alphabet = afnd_definition['V']
         afnd_delta = afnd_definition['delta']

@@ -3,7 +3,7 @@ from graphviz import Source
 
 def read_afd(file_path):
     try:
-        print('entrei ao read afd')
+        print('Entrei no Read AFD')
         with open(file_path, "r") as f:
             afd_definition = json.load(f)
         return afd_definition

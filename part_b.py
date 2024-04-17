@@ -92,7 +92,7 @@ def convert_to_afnd(expression_tree):
     return afnd
 
 def main():
-    input_file = "exemplo03.er.json"
+    input_file = "exemplo02.er.json"
     output_file = "afnd_output.json"
 
     with open(input_file, "r") as f:
